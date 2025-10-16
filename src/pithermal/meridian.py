@@ -110,12 +110,13 @@ class MeridianPiThermal:
     
     @property
     def firmware_version(self):
-        fwv = self.regread('FW_VERSION_1')
-        fwb = self.regread('FW_VERSION_2')
+        fwv = self._regread('FW_VERSION_1')
+        fwb = self._regread('FW_VERSION_2')
         fwv_major = (fwv >> 4) & 0xF
         fwv_minor = fwv & 0xF
         fwv_build = fwb
-    
+        return '{}.{}.{}'.format(fwv_major, fwv_minor, fwv_build)
+
     @property
     def fps_divider(self):
         return self._regread('FRAME_RATE')
@@ -216,7 +217,7 @@ class MeridianPiThermal:
         
     def capture_files(self, name='thermal{:04d}.png', cmap='seaborn:rocket', num_files=1, delay=1):
         self.mode = MeridianPiThermal.MODE_STREAM
-        self.fps_divider = delay * self.max_fps
+        self.fps_divider = int(round(delay * self.max_fps))
         colormap = cm.Colormap(cmap)
         # Continuously capture images until the desired number of files is reached
         captured_files = 0
