@@ -1,0 +1,181 @@
+version = 1
+revision = 3
+requires-python = ">=3.9"
+
+[[package]]
+name = "cmap"
+version = "0.6.2"
+source = { registry = "https://piwheels.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+wheels = [
+    { url = "https://archive1.piwheels.org/simple/cmap/cmap-0.6.2-py3-none-any.whl", hash = "sha256:f72402e5d51b5744d59652e5e334770d1e535d5ee169a3b467d8c37ecbaa61a2" },
+]
+
+[[package]]
+name = "colorzero"
+version = "2.0"
+source = { registry = "https://piwheels.org/simple" }
+dependencies = [
+    { name = "setuptools" },
+]
+wheels = [
+    { url = "https://piwheels.org/simple/colorzero/colorzero-2.0-py2.py3-none-any.whl", hash = "sha256:0e60d743a6b8071498a56465f7719c96a5e92928f858bab1be2a0d606c9aa0f8" },
+]
+
+[[package]]
+name = "crcmod"
+version = "1.7"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/crcmod/crcmod-1.7-cp311-cp311-linux_armv6l.whl", hash = "sha256:8f55e33e218ea22881e12deffd656d05595e70b3c966caca1091ee6652cb9136" },
+    { url = "https://piwheels.org/simple/crcmod/crcmod-1.7-cp311-cp311-linux_armv7l.whl", hash = "sha256:8f55e33e218ea22881e12deffd656d05595e70b3c966caca1091ee6652cb9136" },
+    { url = "https://piwheels.org/simple/crcmod/crcmod-1.7-cp313-cp313-linux_armv6l.whl", hash = "sha256:24e2d712623b91f9fff1058bd706b9a37cab18f70a7e1377b9aeecab1e45d905" },
+    { url = "https://piwheels.org/simple/crcmod/crcmod-1.7-cp313-cp313-linux_armv7l.whl", hash = "sha256:24e2d712623b91f9fff1058bd706b9a37cab18f70a7e1377b9aeecab1e45d905" },
+    { url = "https://archive1.piwheels.org/simple/crcmod/crcmod-1.7-cp39-cp39-linux_armv6l.whl", hash = "sha256:c0599a962094adda0e2d3d40d437a9af9223c261fbe8fc3c7fc228dc3d3545dd" },
+    { url = "https://archive1.piwheels.org/simple/crcmod/crcmod-1.7-cp39-cp39-linux_armv7l.whl", hash = "sha256:c0599a962094adda0e2d3d40d437a9af9223c261fbe8fc3c7fc228dc3d3545dd" },
+]
+
+[[package]]
+name = "gpiozero"
+version = "2.0.1"
+source = { registry = "https://piwheels.org/simple" }
+dependencies = [
+    { name = "colorzero" },
+    { name = "importlib-metadata", marker = "python_full_version < '3.10'" },
+    { name = "importlib-resources", marker = "python_full_version < '3.10'" },
+]
+wheels = [
+    { url = "https://piwheels.org/simple/gpiozero/gpiozero-2.0.1-py3-none-any.whl", hash = "sha256:81faf2837d57df8a7724a0ac2af82cf8e40cff5aa98ca00355587c64c1bb3b70" },
+]
+
+[[package]]
+name = "importlib-metadata"
+version = "4.13.0"
+source = { registry = "https://piwheels.org/simple" }
+dependencies = [
+    { name = "zipp" },
+]
+wheels = [
+    { url = "https://piwheels.org/simple/importlib-metadata/importlib_metadata-4.13.0-py3-none-any.whl", hash = "sha256:7c915d85530611c1d284f16b82ec0ffd022d462425e6fec5f5b7ba8783fa3fb5" },
+]
+
+[[package]]
+name = "importlib-resources"
+version = "5.13.0"
+source = { registry = "https://piwheels.org/simple" }
+dependencies = [
+    { name = "zipp", marker = "python_full_version < '3.10'" },
+]
+wheels = [
+    { url = "https://piwheels.org/simple/importlib-resources/importlib_resources-5.13.0-py3-none-any.whl", hash = "sha256:6f6831d83ac6a64cab4077306bacd869b16fc8ffeca5e9c7106ed5122732abe3" },
+]
+
+[[package]]
+name = "numpy"
+version = "2.0.2"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/numpy/numpy-2.0.2-cp311-cp311-linux_armv6l.whl", hash = "sha256:a0c5c3ea11329e36d0e792d4859f3bfc05e820d56212c1be6a5ed5ba121eb548" },
+    { url = "https://piwheels.org/simple/numpy/numpy-2.0.2-cp311-cp311-linux_armv7l.whl", hash = "sha256:a0c5c3ea11329e36d0e792d4859f3bfc05e820d56212c1be6a5ed5ba121eb548" },
+    { url = "https://piwheels.org/simple/numpy/numpy-2.0.2-cp313-cp313-linux_armv6l.whl", hash = "sha256:364a2d42d4a405e55e5d8dee0eafe843c75a53a299fd5e382185b3333c848df1" },
+    { url = "https://piwheels.org/simple/numpy/numpy-2.0.2-cp313-cp313-linux_armv7l.whl", hash = "sha256:364a2d42d4a405e55e5d8dee0eafe843c75a53a299fd5e382185b3333c848df1" },
+    { url = "https://piwheels.org/simple/numpy/numpy-2.0.2-cp39-cp39-linux_armv6l.whl", hash = "sha256:27740e75344b7522f6be4c3d694775369524f12e3b31327a3642a35f5b416db8" },
+    { url = "https://piwheels.org/simple/numpy/numpy-2.0.2-cp39-cp39-linux_armv7l.whl", hash = "sha256:27740e75344b7522f6be4c3d694775369524f12e3b31327a3642a35f5b416db8" },
+]
+
+[[package]]
+name = "pillow"
+version = "11.2.1"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/pillow/pillow-11.2.1-cp311-cp311-linux_armv6l.whl", hash = "sha256:b1da101402e523453508eabbb4190f9c3b481064cd81ef836803bda5a7aa5669" },
+    { url = "https://piwheels.org/simple/pillow/pillow-11.2.1-cp311-cp311-linux_armv7l.whl", hash = "sha256:b1da101402e523453508eabbb4190f9c3b481064cd81ef836803bda5a7aa5669" },
+    { url = "https://piwheels.org/simple/pillow/pillow-11.2.1-cp313-cp313-linux_armv6l.whl", hash = "sha256:3509df1b6564f735863f8466aaee1ac95ff5d770103c9278d6876db9c5ca075b" },
+    { url = "https://piwheels.org/simple/pillow/pillow-11.2.1-cp313-cp313-linux_armv7l.whl", hash = "sha256:3509df1b6564f735863f8466aaee1ac95ff5d770103c9278d6876db9c5ca075b" },
+    { url = "https://piwheels.org/simple/pillow/pillow-11.2.1-cp39-cp39-linux_armv6l.whl", hash = "sha256:475077cc899e668a9b8de7ef58d68f6f6ea6ba47ea2c61e3228b72f8719a9c19" },
+    { url = "https://piwheels.org/simple/pillow/pillow-11.2.1-cp39-cp39-linux_armv7l.whl", hash = "sha256:475077cc899e668a9b8de7ef58d68f6f6ea6ba47ea2c61e3228b72f8719a9c19" },
+]
+
+[[package]]
+name = "pithermal"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "cmap" },
+    { name = "crcmod" },
+    { name = "gpiozero" },
+    { name = "numpy" },
+    { name = "pillow" },
+    { name = "rpi-gpio" },
+    { name = "smbus" },
+    { name = "spidev" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "cmap", specifier = ">=0.6.2" },
+    { name = "crcmod", specifier = ">=1.7" },
+    { name = "gpiozero", specifier = ">=2.0.1" },
+    { name = "numpy", specifier = "==2.0.2" },
+    { name = "pillow", specifier = "==11.2.1" },
+    { name = "rpi-gpio", specifier = ">=0.7.1" },
+    { name = "smbus", specifier = ">=1.1.post2" },
+    { name = "spidev", specifier = ">=3.8" },
+]
+
+[[package]]
+name = "rpi-gpio"
+version = "0.7.1"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/rpi-gpio/RPi.GPIO-0.7.1-cp311-cp311-linux_armv6l.whl", hash = "sha256:df02c92d1a55ff8cdfffea5012ea73a9b09fdcc4d14799d834b3840fcf4039ad" },
+    { url = "https://piwheels.org/simple/rpi-gpio/RPi.GPIO-0.7.1-cp311-cp311-linux_armv7l.whl", hash = "sha256:df02c92d1a55ff8cdfffea5012ea73a9b09fdcc4d14799d834b3840fcf4039ad" },
+    { url = "https://piwheels.org/simple/rpi-gpio/RPi.GPIO-0.7.1-cp39-cp39-linux_armv6l.whl", hash = "sha256:231f6142c25975a7e39b96faf4905f05f97dba6809e8c5f0d58f284b35b4b821" },
+    { url = "https://piwheels.org/simple/rpi-gpio/RPi.GPIO-0.7.1-cp39-cp39-linux_armv7l.whl", hash = "sha256:231f6142c25975a7e39b96faf4905f05f97dba6809e8c5f0d58f284b35b4b821" },
+    { url = "https://piwheels.org/simple/rpi-gpio/rpi_gpio-0.7.1-cp313-cp313-linux_armv6l.whl", hash = "sha256:fc1fc50ba7dd5ac5ec792f68012763a8548c4520047e1be0f3b8a077a7aa01f8" },
+    { url = "https://piwheels.org/simple/rpi-gpio/rpi_gpio-0.7.1-cp313-cp313-linux_armv7l.whl", hash = "sha256:fc1fc50ba7dd5ac5ec792f68012763a8548c4520047e1be0f3b8a077a7aa01f8" },
+]
+
+[[package]]
+name = "setuptools"
+version = "80.9.0"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/setuptools/setuptools-80.9.0-py3-none-any.whl", hash = "sha256:3d209672d008f035ec80af944dfa381396b57754a83983d30d0bab717e7407e4" },
+]
+
+[[package]]
+name = "smbus"
+version = "1.1.post2"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/smbus/smbus-1.1.post2-cp311-cp311-linux_armv6l.whl", hash = "sha256:0393e4a00e35ad70489d03377ed4ad429047a9e4a35c1c12c0d85ad80b332d67" },
+    { url = "https://piwheels.org/simple/smbus/smbus-1.1.post2-cp311-cp311-linux_armv7l.whl", hash = "sha256:0393e4a00e35ad70489d03377ed4ad429047a9e4a35c1c12c0d85ad80b332d67" },
+    { url = "https://piwheels.org/simple/smbus/smbus-1.1.post2-cp313-cp313-linux_armv6l.whl", hash = "sha256:5ac7e3d8d4bb51da8687319a6d58758c3d28380fa9fa743bfa2032b1ff32577e" },
+    { url = "https://piwheels.org/simple/smbus/smbus-1.1.post2-cp313-cp313-linux_armv7l.whl", hash = "sha256:5ac7e3d8d4bb51da8687319a6d58758c3d28380fa9fa743bfa2032b1ff32577e" },
+    { url = "https://piwheels.org/simple/smbus/smbus-1.1.post2-cp39-cp39-linux_armv6l.whl", hash = "sha256:b0cdccebd5d4e611cfb950bddff8798962b5d709a8e6d46c29b1929ab4f2abbc" },
+    { url = "https://piwheels.org/simple/smbus/smbus-1.1.post2-cp39-cp39-linux_armv7l.whl", hash = "sha256:b0cdccebd5d4e611cfb950bddff8798962b5d709a8e6d46c29b1929ab4f2abbc" },
+]
+
+[[package]]
+name = "spidev"
+version = "3.8"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/spidev/spidev-3.8-cp311-cp311-linux_armv6l.whl", hash = "sha256:48f3df59f750d6cfc7ee9bbc8248eb510df5956230c15becf113987407d19281" },
+    { url = "https://piwheels.org/simple/spidev/spidev-3.8-cp311-cp311-linux_armv7l.whl", hash = "sha256:48f3df59f750d6cfc7ee9bbc8248eb510df5956230c15becf113987407d19281" },
+    { url = "https://piwheels.org/simple/spidev/spidev-3.8-cp313-cp313-linux_armv6l.whl", hash = "sha256:0bd48106ab13a28446cc4e56d9d56f08203651f351cf1c679b105a0413e0036c" },
+    { url = "https://piwheels.org/simple/spidev/spidev-3.8-cp313-cp313-linux_armv7l.whl", hash = "sha256:0bd48106ab13a28446cc4e56d9d56f08203651f351cf1c679b105a0413e0036c" },
+    { url = "https://piwheels.org/simple/spidev/spidev-3.8-cp39-cp39-linux_armv6l.whl", hash = "sha256:4d8cdcf7c37dee94d4d0d3fd1a6412914fc13fddd25711cf5f44edf572620058" },
+    { url = "https://piwheels.org/simple/spidev/spidev-3.8-cp39-cp39-linux_armv7l.whl", hash = "sha256:4d8cdcf7c37dee94d4d0d3fd1a6412914fc13fddd25711cf5f44edf572620058" },
+]
+
+[[package]]
+name = "zipp"
+version = "3.23.0"
+source = { registry = "https://piwheels.org/simple" }
+wheels = [
+    { url = "https://piwheels.org/simple/zipp/zipp-3.23.0-py3-none-any.whl", hash = "sha256:8c8b5f00b87a3f2eb9af9e700a941fb198c216d0dbfcd76487a0299a65fbba08" },
+]
