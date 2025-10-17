@@ -54,17 +54,17 @@ class MeridianPiThermal:
     REG_USER_FLASH_CTRL = 0xD8
 
     # Status register values
-    STATUS_READOUT_TOO_SLOW = 0x02
-    STATUS_SENXOR_IF_ERROR = 0x04
-    STATUS_CAPTURE_ERROR = 0x08
-    STATUS_DATA_READY = 0x10
-    STATUS_BOOTING = 0x20
+    STATUS_READOUT_TOO_SLOW = 0x02  #: Bit set if frame data was not read in time
+    STATUS_SENXOR_IF_ERROR = 0x04  #: Bit set when interface error occurs during power-up
+    STATUS_CAPTURE_ERROR = 0x08  #: Bit set when interface error occurs during capture
+    STATUS_DATA_READY = 0x10  #: Bit set if fresh frame data is available
+    STATUS_BOOTING = 0x20  #: Bit set if processor is booting
 
     # Mode register values
-    MODE_SINGLE = 0x01  #: Bit for single capture mode
-    MODE_STREAM = 0x02  #: Bit for continuous capture mode
-    MODE_READOUT = 0x1C  #: Bit for readout mode, currently only support full-frame
-    MODE_NO_HEADER = 0x20  #: Bit for disabling frame headers
+    MODE_SINGLE = 0x01  #: Bit set for single capture mode
+    MODE_STREAM = 0x02  #: Bit set for continuous capture mode
+    MODE_READOUT = 0x1C  #: Bits set for readout mode, currently only supports full-frame
+    MODE_NO_HEADER = 0x20  #: Bit set for disabling frame headers
 
     def __init__(self):
         # Set up logger
@@ -112,6 +112,8 @@ class MeridianPiThermal:
         """
         Current operating mode of the thermal image processor. Can be either single or continuous capturing with or
         without headers. If neither, no capturing takes place.
+
+        To check against a specific mode, do a bitwise comparison through ``mode & MODE_*``.
         """
         return self._regread('FRAME_MODE')
 
@@ -121,6 +123,10 @@ class MeridianPiThermal:
 
     @property
     def firmware_version(self):
+        """
+        Firmware version of the thermal image processor. Consists of a major and minor version number along with a
+        build number, each separated by dots.
+        """
         fwv = self._regread('FW_VERSION_1')
         fwb = self._regread('FW_VERSION_2')
         fwv_major = (fwv >> 4) & 0xF
@@ -130,6 +136,10 @@ class MeridianPiThermal:
 
     @property
     def fps_divider(self):
+        """
+        Frame rate divider. The actual frame rate at which images are emitted will be the sensor's maximum frame rate
+        (30 fps in most cases) divided by this value.
+        """
         return self._regread('FRAME_RATE')
 
     @fps_divider.setter
@@ -138,6 +148,12 @@ class MeridianPiThermal:
 
     @property
     def status(self):
+        """
+        Current state of the thermal imaging processor. Indicates that booting is in progress or that data is ready, and
+        exposes communication and capturing errors.
+
+        To check against a specific status, do a bitwise comparison through ``status & STATUS_*``.
+        """
         status = self._regread('STATUS')
         if status != 0:
             self.logger.warning('Non-zero STATUS: 0x{:02X}'.format(status))
@@ -157,6 +173,10 @@ class MeridianPiThermal:
 
     @property
     def serial_number(self):
+        """
+        Unique identifier for the attached thermal imaging module. Consists of production year, production week,
+        manufacturing location, and serial number, each separated by dots.
+        """
         base_addr = MeridianPiThermal.REG_SENXOR_ID
         prod_year = self._regread(base_addr) + 2000
         prod_week = self._regread(base_addr + 1)

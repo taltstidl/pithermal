@@ -9,13 +9,20 @@ Meridian Innovation
 
    .. rubric:: Registers
 
-   The thermal imaging processor exposes status information and configuration options through I2C and various registers. Many register values are in turn available here as properties.
+   The thermal imaging processor exposes status information and configuration options in registers accessible through I2C. Some registers' values are also available here as properties. You should not normally need to use those directly but it may aid in debugging any issues that may occur.
 
    .. autoattribute:: MODE_SINGLE
    .. autoattribute:: MODE_STREAM
-   .. autoattribute:: MODE_READOUT
    .. autoattribute:: MODE_NO_HEADER
    .. autoproperty:: mode
+   .. autoproperty:: firmware_version
+   .. autoproperty:: fps_divider
+   .. autoattribute:: STATUS_READOUT_TOO_SLOW
+   .. autoattribute:: STATUS_SENXOR_IF_ERROR
+   .. autoattribute:: STATUS_CAPTURE_ERROR
+   .. autoattribute:: STATUS_DATA_READY
+   .. autoattribute:: STATUS_BOOTING
+   .. autoproperty:: status
 
    .. rubric:: Capturing images
 
