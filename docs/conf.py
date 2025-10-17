@@ -27,6 +27,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 autodoc_mock_imports = ['cmap', 'numpy', 'gpiozero', 'PIL', 'smbus', 'spidev', 'crcmod']
 
+html_logo = '_static/logo.svg'
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
