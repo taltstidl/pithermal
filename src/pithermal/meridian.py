@@ -66,6 +66,12 @@ class MeridianPiThermal:
     MODE_READOUT = 0x1C  #: Bits set for readout mode, currently only supports full-frame
     MODE_NO_HEADER = 0x20  #: Bit set for disabling frame headers
 
+    FILTER_TEMP_ENABLE = 0x01  #: Bit set when temporal filter is enabled
+    FILTER_TEMP_INIT = 0x02  #: Bit set to reinitialize temporal filter when strength is changed
+    FILTER_ROLL_AVG_ENABLE = 0x04  #: Bit set when rolling average filter is enabled
+    FILTER_MEDIAN_K = 0x20  #: Bit set to choose kernel size 3 (0) or 5 (1)
+    FILTER_MEDIAN_ENABLE = 0x40  #: Bit set when median filter is enabled
+
     def __init__(self):
         # Set up logger
         self.logger = logging.getLogger(type(self).__name__)
@@ -185,6 +191,20 @@ class MeridianPiThermal:
                     + self._regread(base_addr + 5)
         return '{}.{}.{}.{}'.format(prod_year, prod_week, mfg_loc, serial_no)
 
+    @property
+    def filter(self):
+        """
+        Configuration of the thermal image processor's built-in filters. Used to set up temporal filtering, rolling
+        average filtering (both temporal) and median filtering (spatial).
+
+        To check against a specific status, do a bitwise comparison through ``filter & FILTER_*``.
+        """
+        return self._regread('FILTER_CONTROL')
+
+    @filter.setter
+    def filter(self, value):
+        self._regwrite('FILTER_CONTROL', value)
+
     def _read_frame(self, with_header=True, crc_verify=True):
         self.gpio_drdy.wait_for_active()
         self.logger.debug('Retrieving frame')
@@ -228,6 +248,75 @@ class MeridianPiThermal:
         image = image.reshape((cols, rows), order='F').T.astype(np.float16)  # convert to proper image
         return image
 
+    @property
+    def is_temporal_filter_enabled(self):
+        """ Whether the temporal filter is enabled. *Read-only.* """
+        return self._regread('FILTER_CONTROL') & MeridianPiThermal.FILTER_TEMP_ENABLE
+
+    def configure_temporal_filter(self, enabled=True, strength=50):
+        """ Configure the temporal filter.
+
+        Parameters
+        ----------
+        enabled: bool
+            Whether to enable or disable the temporal filter.
+        strength: int
+            Strength of the temporal filter. The higher the value, the more stable the readout temperature becomes, but
+            the more ghosting artifacts will appear.
+        """
+        if enabled:
+            base_addr = MeridianPiThermal.REG_FILTER_SETTING_1
+            self._regwrite(base_addr, strength & 0xFF)
+            self._regwrite(base_addr + 1, (strength & 0xFF00) >> 8)
+            self.filter |= MeridianPiThermal.FILTER_TEMP_ENABLE | MeridianPiThermal.FILTER_TEMP_INIT
+        else:
+            self.filter &= 0xFF - MeridianPiThermal.FILTER_TEMP_ENABLE
+
+    @property
+    def is_rolling_avg_filter_enabled(self):
+        """ Whether the rolling average filter is enabled. *Read-only.* """
+        return self._regread('FILTER_CONTROL') & MeridianPiThermal.FILTER_ROLL_AVG_ENABLE
+
+    def configure_rolling_avg_filter(self, enabled=True, num_frames=5):
+        r""" Configure the rolling average filter.
+
+        Parameters
+        ----------
+        enabled: bool
+            Whether to enable or disable the rolling average filter.
+        num_frames: int
+            Number of frames to average over. The readout temperature :math:`\bar{T}_i = \bar{T}_{i-1} + \frac{1}{N}
+            (T_i - \bar{T}_{i-1})` is based on the measured :math:`T_i` and the previous average :math:`\bar{T}_{i-1}`.
+        """
+        if enabled:
+            self._regwrite(MeridianPiThermal.REG_FILTER_SETTING_2, num_frames)
+            self.filter |= MeridianPiThermal.FILTER_ROLL_AVG_ENABLE
+        else:
+            self.filter &= 0xFF - MeridianPiThermal.FILTER_ROLL_AVG_ENABLE
+
+    @property
+    def is_median_filter_enabled(self):
+        """ Whether the rolling average filter is enabled. *Read-only.* """
+        return self._regread('FILTER_CONTROL') & MeridianPiThermal.FILTER_MEDIAN_ENABLE
+
+    def configure_median_filter(self, enabled=True, kernel_size=3):
+        """ Configure the median filter.
+
+        Parameters
+        ----------
+        enabled: bool
+            Whether to enable or disable the median filter.
+        kernel_size: int
+            Kernel size of the spatial median filter. Must be either 3 or 5.
+        """
+        if enabled:
+            if kernel_size != 3 and kernel_size != 5:
+                raise ValueError('Kernel size must be either 3 or 5')
+            k_bit = MeridianPiThermal.FILTER_MEDIAN_K if kernel_size == 5 else 0x0
+            self.filter |= MeridianPiThermal.FILTER_MEDIAN_ENABLE | k_bit
+        else:
+            self.filter &= 0xFF - MeridianPiThermal.FILTER_MEDIAN_ENABLE
+
     def capture_array(self):
         """ Capture a single thermal image as a raw temperature array. The temperature values are pre-converted
         to 16-bit floats in °C units.
@@ -239,7 +328,7 @@ class MeridianPiThermal:
         self.mode = MeridianPiThermal.MODE_SINGLE
         return self._read_frame()
 
-    def capture_image(self, cmap: str = 'seaborn:rocket'):
+    def capture_image(self, cmap='seaborn:rocket'):
         """ Capture a single thermal image as a PIL image.
 
         Parameters

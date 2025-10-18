@@ -29,6 +29,8 @@ autodoc_mock_imports = ['cmap', 'numpy', 'gpiozero', 'PIL', 'smbus', 'spidev', '
 
 html_logo = '_static/logo.svg'
 
+toc_object_entries_show_parents = 'hide'
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
