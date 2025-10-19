@@ -269,6 +269,7 @@ class MeridianPiThermal:
             self._regwrite(base_addr, strength & 0xFF)
             self._regwrite(base_addr + 1, (strength & 0xFF00) >> 8)
             self.filter |= MeridianPiThermal.FILTER_TEMP_ENABLE | MeridianPiThermal.FILTER_TEMP_INIT
+            time.sleep(40e-3)  # wait for 40ms for temporal filter to settle
         else:
             self.filter &= 0xFF - MeridianPiThermal.FILTER_TEMP_ENABLE
 
