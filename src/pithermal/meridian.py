@@ -205,49 +205,6 @@ class MeridianPiThermal:
     def filter(self, value):
         self._regwrite('FILTER_CONTROL', value)
 
-    def _read_frame(self, with_header=True, crc_verify=True):
-        self.gpio_drdy.wait_for_active()
-        self.logger.debug('Retrieving frame')
-        self.gpio_cs.on()
-        time.sleep(MI48_SPI_CS_DELAY)
-
-        cols, rows = self.image_shape
-        xfer_size = cols * rows  # image
-        if with_header:
-            xfer_size += cols  # header
-        xfer_bytes = 2 * xfer_size
-
-        data = np.zeros(xfer_bytes, dtype='u1')
-        xfer_step = 160  # size in bytes of a single transfer
-        dummy_bytes = [0, ] * xfer_step
-        for i in range(0, xfer_bytes, xfer_step):
-            data[i:i + xfer_step] = np.array(self.spi.xfer2(dummy_bytes)).astype('u1')
-        data = np.ndarray(buffer=data, shape=(xfer_size,), dtype='>u2')
-        self.logger.debug('Received {} bytes'.format(data.shape[0]))
-
-        time.sleep(MI48_SPI_CS_DELAY)
-        self.gpio_cs.off()
-
-        header, image = data[:-cols * rows], data[-cols * rows:]
-        if with_header:
-            frame_count = header[0]
-            senxor_vdd = header[1] / 1.0e4
-            senxor_temp = header[2] / 100. + KELVIN_0
-            timestamp = (header[4] << 16) + header[3]
-            max_temp = header[5] / 10. + KELVIN_0
-            min_temp = header[6] / 10. + KELVIN_0
-            crc = hex(header[7])
-            if crc_verify:
-                crc_ref = hex(crc16(data))
-                if crc == crc_ref:
-                    self.logger.warning('CRC failed')
-                else:
-                    self.logger.debug('CRC passed')
-
-        image = image / 10. + KELVIN_0  # convert to temperature
-        image = image.reshape((cols, rows), order='F').T.astype(np.float16)  # convert to proper image
-        return image
-
     @property
     def calibration_offset(self):
         """ Offset added to each pixel for bias correction, in K. """
@@ -384,6 +341,49 @@ class MeridianPiThermal:
             self.filter |= MeridianPiThermal.FILTER_MEDIAN_ENABLE | k_bit
         else:
             self.filter &= 0xFF - MeridianPiThermal.FILTER_MEDIAN_ENABLE
+
+    def _read_frame(self, with_header=True, crc_verify=True):
+        self.gpio_drdy.wait_for_active()
+        self.logger.debug('Retrieving frame')
+        self.gpio_cs.on()
+        time.sleep(MI48_SPI_CS_DELAY)
+
+        cols, rows = self.image_shape
+        xfer_size = cols * rows  # image
+        if with_header:
+            xfer_size += cols  # header
+        xfer_bytes = 2 * xfer_size
+
+        data = np.zeros(xfer_bytes, dtype='u1')
+        xfer_step = 160  # size in bytes of a single transfer
+        dummy_bytes = [0, ] * xfer_step
+        for i in range(0, xfer_bytes, xfer_step):
+            data[i:i + xfer_step] = np.array(self.spi.xfer2(dummy_bytes)).astype('u1')
+        data = np.ndarray(buffer=data, shape=(xfer_size,), dtype='>u2')
+        self.logger.debug('Received {} bytes'.format(data.shape[0]))
+
+        time.sleep(MI48_SPI_CS_DELAY)
+        self.gpio_cs.off()
+
+        header, image = data[:-cols * rows], data[-cols * rows:]
+        if with_header:
+            frame_count = header[0]
+            senxor_vdd = header[1] / 1.0e4
+            senxor_temp = header[2] / 100. + KELVIN_0
+            timestamp = (header[4] << 16) + header[3]
+            max_temp = header[5] / 10. + KELVIN_0
+            min_temp = header[6] / 10. + KELVIN_0
+            crc = hex(header[7])
+            if crc_verify:
+                crc_ref = hex(crc16(data))
+                if crc == crc_ref:
+                    self.logger.warning('CRC failed')
+                else:
+                    self.logger.debug('CRC passed')
+
+        image = image / 10. + KELVIN_0  # convert to temperature
+        image = image.reshape((cols, rows), order='F').T.astype(np.float16)  # convert to proper image
+        return image
 
     def capture_array(self):
         """ Capture a single thermal image as a raw temperature array. The temperature values are pre-converted
