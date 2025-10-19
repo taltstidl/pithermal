@@ -72,6 +72,8 @@ class MeridianPiThermal:
     FILTER_MEDIAN_K = 0x20  #: Bit set to choose kernel size 3 (0) or 5 (1)
     FILTER_MEDIAN_ENABLE = 0x40  #: Bit set when median filter is enabled
 
+    COUGAR_CODES = [19, 20, 21]  # List of known Cougar module types (80x62 sensors)
+
     def __init__(self):
         # Set up logger
         self.logger = logging.getLogger(type(self).__name__)
@@ -93,9 +95,11 @@ class MeridianPiThermal:
             time.sleep(0.025)
         self.logger.debug('Finished booting')
         # Determine camera properties
-        # TODO: Actually determine this based on reported module type
-        self.image_shape = (80, 62)
-        self.max_fps = 30
+        if self.module_type in MeridianPiThermal.COUGAR_CODES:
+            self.image_shape = (80, 62)
+            self.max_fps = 30
+        else:
+            raise RuntimeError('Module type {} is unknown and thus unsupported')
 
     def reset(self, assert_seconds=0.00005, deassert_seconds=0.05):
         self.gpio_rst.on()
@@ -178,9 +182,17 @@ class MeridianPiThermal:
         return status
 
     @property
-    def serial_number(self):
+    def module_type(self):
         """
-        Unique identifier for the attached thermal imaging module. Consists of production year, production week,
+        Type code for the attached thermal camera module and lens combination. A list of valid type codes is typically
+        reproduced in Appendix I of the datasheet.
+        """
+        return self._regread('MODULE_TYPE')
+
+    @property
+    def camera_id(self):
+        """
+        Unique identifier for the attached thermal camera module. Consists of production year, production week,
         manufacturing location, and serial number, each separated by dots.
         """
         base_addr = MeridianPiThermal.REG_SENXOR_ID

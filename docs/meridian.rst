@@ -31,6 +31,8 @@ Meridian Innovation
    .. autoattribute:: STATUS_BOOTING
       :noindex:
    .. autoproperty:: status
+   .. autoproperty:: module_type
+   .. autoproperty:: camera_id
    .. autoattribute:: FILTER_TEMP_ENABLE
       :noindex:
    .. autoattribute:: FILTER_TEMP_INIT
