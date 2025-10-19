@@ -249,6 +249,73 @@ class MeridianPiThermal:
         return image
 
     @property
+    def calibration_offset(self):
+        """ Offset added to each pixel for bias correction, in K. """
+        offset = self._regread(MeridianPiThermal.REG_OFFSET_CORR)
+        return 0.1 * (offset if offset > 128 else -(256 - offset))
+
+    @calibration_offset.setter
+    def calibration_offset(self, value):
+        if value < -12.8 or value > 12.7:
+            raise ValueError('Offset correction must be between -12.8K and +12.7K')
+        n = int(round(value / 0.1))
+        self._regwrite(MeridianPiThermal.REG_OFFSET_CORR, 256 - abs(n) if n < 0 else n)
+
+    @property
+    def calibration_factor(self):
+        """ Multiplicative factor for sensitivity correction, useful when a protective filter is placed in
+        front of the thermal camera lens. *Read-only* until I can figure out the data format. """
+        return self._regread(MeridianPiThermal.REG_SENSITIVITY_FACTOR)
+
+    @property
+    def emissivity(self):
+        """ Emissivity used to convert raw data to temperature data, in percent. Default value (95%) reflects emissivity
+        of black body source used for factory calibration. """
+        return self._regread(MeridianPiThermal.REG_EMISSIVITY)
+
+    @emissivity.setter
+    def emissivity(self, value):
+        if value < 0 or value > 100:
+            raise ValueError('Emissivity must be a percentage between 0% - 100%')
+        self._regwrite(MeridianPiThermal.REG_EMISSIVITY, int(value))
+
+    def self_calibrate(self, force=True, num_frames=100):
+        """ Switch to self calibration.
+
+        Parameters
+        ----------
+        force: bool
+            Whether to recollect column offsets for calibration or reuse previously collected ones (from power-up, a
+            gain change or another forced calibration).
+        num_frames: int
+            Number of frames used to calculate column offsets for calibration.
+        """
+        if not num_frames in range(100, 801, 100):
+            raise ValueError('Number of calibration frames must be in range 100, 200, ..., 800')
+        num_frames = num_frames // 100 - 1
+        calibration = self._regread(MeridianPiThermal.REG_SELF_CALIBRATION)
+        # Wait for running calibration to finish if necessary
+        while calibration & 0x04:
+            time.sleep(0.025)
+            calibration = self._regread(MeridianPiThermal.REG_SELF_CALIBRATION)
+        if force or (calibration >> 5) != num_frames:
+            calibration |= 0x02  # initiate column offset collection
+            calibration = (calibration & ~(0b111 << 5)) | (num_frames << 5)
+        calibration |= 0x10  # enable self calibration
+        self._regwrite(MeridianPiThermal.REG_SELF_CALIBRATION, calibration)
+        # Wait for current calibration to finish
+        while self._regread(MeridianPiThermal.REG_SELF_CALIBRATION) & 0x04:
+            time.sleep(0.025)
+
+    def factory_calibrate(self):
+        """
+        Restore factory calibration.
+        """
+        calibration = self._regread(MeridianPiThermal.REG_SELF_CALIBRATION)
+        calibration &= 0xFF - 0x10
+        self._regwrite(MeridianPiThermal.REG_SELF_CALIBRATION, calibration)
+
+    @property
     def is_temporal_filter_enabled(self):
         """ Whether the temporal filter is enabled. *Read-only.* """
         return self._regread('FILTER_CONTROL') & MeridianPiThermal.FILTER_TEMP_ENABLE

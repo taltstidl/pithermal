@@ -47,6 +47,12 @@ Meridian Innovation
 
    .. warning:: The module comes factory-calibrated. If you change any of the calibration settings you may not be able to recover the original settings provided from the factory. Only proceed if you know what you are doing.
 
+   .. autoproperty:: calibration_offset
+   .. autoproperty:: calibration_factor
+   .. autoproperty:: emissivity
+   .. automethod:: self_calibrate
+   .. automethod:: factory_calibrate
+
    .. rubric:: Configuring filters
 
    The thermal image processor supports some built-in filtering techniques, namely temporal, rolling average, and median filtering. Since these are software-based they are turned off by default.
